@@ -24,10 +24,10 @@ from osc_lib import shell
 import six
 
 import openstackclient
+from openstackclient.api import openstacksdk
 from openstackclient.common import client_config as cloud_config
 from openstackclient.common import clientmanager
 from openstackclient.common import commandmanager
-
 
 DEFAULT_DOMAIN = 'default'
 
@@ -168,6 +168,11 @@ class OpenStackShell(shell.OpenStackShell):
             cli_options=self.cloud,
             api_version=self.api_version,
             pw_func=shell.prompt_for_password,
+        )
+
+        self.sdk = openstacksdk.ConnectionManager(
+            cli_options=self.cloud,
+            verify=self.verify,
         )
 
     def prepare_to_run_command(self, cmd):
