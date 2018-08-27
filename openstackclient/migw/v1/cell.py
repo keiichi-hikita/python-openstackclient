@@ -26,11 +26,11 @@ ROWS_FOR_SHOW = [
     'ID',
     'Name',
     'Description',
-    'Availability Zone',
+    'Region',
     'Size',
+    'Firewall Policy Type',
     'Utilization',
     'Status',
-    'Interfaces',
 ]
 
 
@@ -262,28 +262,25 @@ def _set_configurations(data):
     return setattr(data, 'configurations', result_str)
 
 
+class ActivateCell(command.Command):
 
-# class StopVirtualNetworkAppliance(command.Command):
-#
-#     def get_parser(self, prog_name):
-#         parser = super(StopVirtualNetworkAppliance, self).\
-#             get_parser(prog_name)
-#         parser.add_argument(
-#             'virtual_network_appliance',
-#             metavar='<virtual-network-appliance-id>',
-#             nargs="+",
-#             help=_('Virtual Network Appliance(s) to stop'),
-#         )
-#         return parser
-#
-#     def take_action(self, parsed_args):
-#         vnf_client = self.app.sdk.conn.virtual_network_appliance
-#
-#         for virtual_network_appliance in parsed_args.virtual_network_appliance:
-#             vnf_client.\
-#                 stop_virtual_network_appliance(virtual_network_appliance)
-#
-#
+    def get_parser(self, prog_name):
+        parser = super(ActivateCell, self).get_parser(prog_name)
+        parser.add_argument(
+            'cells',
+            metavar='<cell-id>',
+            nargs="+",
+            help=_('Cell(s) to activate'),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        client = self.app.sdk.conn.micro_internet_gateway
+
+        for cell in parsed_args.cells:
+            client.activate_cell(cell)
+
+
 # class RestartVirtualNetworkAppliance(command.Command):
 #
 #     def get_parser(self, prog_name):
