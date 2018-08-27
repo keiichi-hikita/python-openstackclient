@@ -31,6 +31,7 @@ ROWS_FOR_SHOW = [
     'Firewall Policy Type',
     'Utilization',
     'Status',
+    'API Key'
 ]
 
 
@@ -106,8 +107,20 @@ class ShowCell(command.ShowOne):
         size = client.get_size(data.size_id)
         setattr(data, 'size', size.name)
 
+        regions = client.regions()
+        for region in regions:
+            if data.region_id == region.id:
+                setattr(data, 'region', region.name)
+
+        firewall_policy_types = client.firewall_policy_types()
+        for firewall_policy_type in firewall_policy_types:
+            if data.firewall_policy_type_id == firewall_policy_type.id:
+                setattr(data, 'firewall_policy_type', 
+                        firewall_policy_type.name)
+
+
         # TODO interface information
-        _set_interfaces_for_display(data)
+        # _set_interfaces_for_display(data)
 
         return (row_headers, (utils.get_item_properties(data, rows)))
 
